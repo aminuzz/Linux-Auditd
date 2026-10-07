@@ -1,0 +1,25 @@
+
+
+## First rule - delete all
+-D
+## Increase the buffers to survive stress events.
+## Make this bigger for busy systems
+-b 8192
+
+## This determine how long to wait in burst of events
+--backlog_wait_time 60000
+
+## Set failure mode to syslog
+-f 1
+
+## My rules
+-w /home/codepath/project2-main/protected_files/car_sales.csv -p w -k car_sales
+-w /home/codepath/project2-main/protected_files/cloudia.txt -p w -k cloudia
+-w /home/codepath/project2-main/protected_files/dolly.txt -p w -k dolly
+-w /home/codepath/project2-main/protected_files/earthquakes.csv -p w -k earthquakes
+-w /home/codepath/project2-main/protected_files/loggy.txt -p w -k loggy
+-w /home/codepath/project2-main/protected_files/oakley.txt -p w -k oakley
+-w /home/codepath/project2-main/protected_files/precipitation.csv -p w -k precipitation
+-w /home/codepath/project2-main/protected_files/squeaky.txt -p w -k squeaky
+-w /home/codepath/project2-main/protected_files/toasty.txt -p w -k toasty
+-w /home/codepath/project2-main/protected_files/website.js -p w -k website

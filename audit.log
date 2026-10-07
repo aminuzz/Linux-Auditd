@@ -1,0 +1,12 @@
+type=PROCTITLE msg=audit(10/06/2026 23:01:25.810:79) : proctitle=./attack-a 
+type=SYSCALL msg=audit(10/06/2026 23:01:25.810:79) : arch=x86_64 syscall=openat success=yes exit=3 a0=AT_FDCWD a1=0x7ffe07b028d0 a2=O_WRONLY|O_CREAT|O_APPEND a3=0x1b6 items=1 ppid=1840 pid=15808 auid=kali uid=kali gid=kali euid=kali suid=kali fsuid=kali egid=kali sgid=kali fsgid=kali tty=pts0 ses=2 comm=attack-a exe=/home/kali/auditd_project/project2-main/attack-a subj=unconfined key=cloudia 
+type=USER_CMD msg=audit(10/06/2026 23:01:43.155:81) : pid=15972 uid=kali auid=kali ses=2 subj=unconfined msg='cwd=/home/kali/auditd_project/project2-main cmd=ausearch -i -x ./attack-a exe=/usr/bin/sudo terminal=pts/0 res=success' 
+
+type=PROCTITLE msg=audit(10/06/2026 23:10:31.774:148) : proctitle=./attack-b 
+type=SYSCALL msg=audit(10/06/2026 23:10:31.774:148) : arch=x86_64 syscall=openat success=yes exit=3 a0=AT_FDCWD a1=0x7ffddf904a70 a2=O_WRONLY|O_CREAT|O_APPEND a3=0x1b6 items=1 ppid=1840 pid=21825 auid=kali uid=kali gid=kali euid=kali suid=kali fsuid=kali egid=kali sgid=kali fsgid=kali tty=pts0 ses=2 comm=attack-b exe=/home/kali/auditd_project/project2-main/attack-b subj=unconfined key=oakley 
+type=PROCTITLE msg=audit(10/06/2026 23:10:31.778:149) : proctitle=./attack-b 
+type=SYSCALL msg=audit(10/06/2026 23:10:31.778:149) : arch=x86_64 syscall=openat success=yes exit=3 a0=AT_FDCWD a1=0x7ffddf904b70 a2=O_WRONLY|O_CREAT|O_APPEND a3=0x1b6 items=1 ppid=1840 pid=21825 auid=kali uid=kali gid=kali euid=kali suid=kali fsuid=kali egid=kali sgid=kali fsgid=kali tty=pts0 ses=2 comm=attack-b exe=/home/kali/auditd_project/project2-main/attack-b subj=unconfined key=squeaky
+
+type=PROCTITLE msg=audit(10/06/2026 23:14:54.704:164) : proctitle=./attack-c 
+type=SYSCALL msg=audit(10/06/2026 23:14:54.704:164) : arch=x86_64 syscall=openat success=yes exit=3 a0=AT_FDCWD a1=0x7fff56308da0 a2=O_WRONLY|O_CREAT|O_APPEND a3=0x1b6 items=1 ppid=1840 pid=24755 auid=kali uid=kali gid=kali euid=kali suid=kali fsuid=kali egid=kali sgid=kali fsgid=kali tty=pts0 ses=2 comm=attack-c exe=/home/kali/auditd_project/project2-main/attack-c subj=unconfined key=precipitation
+
