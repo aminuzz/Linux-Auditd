@@ -22,13 +22,20 @@ forensic analysis workflow.
 | `/etc/audit/rules.d/audit.rules` | Persistent rules file, loaded on boot via `sudo augenrules --load` |
 | ausearch / aureport | Tools for querying and summarizing the audit log |
 
+## Project Files
+| File | Description |
+|------|-------------|
+| `attack-a`, `attack-b`, `attack-c` | Compiled ELF binaries that each modify a different protected file |
+| `protected_files/` | The 10 files monitored by auditd watch rules |
+| `audit.rules` | Watch rules loaded into auditd via `augenrules` |
+| `audit.log` | Audit log captured during the attack runs |
 
 ## Environment
 
 | Component | Details |
 |-----------|---------|
 | OS | Kali Linux |
-| Virtualization | VMware |
+| Virtualization | VirtualBox |
 | Shell | Bash |
 | Audit Daemon | auditd |
 | Key Tools | auditctl, ausearch, aureport, augenrules |
@@ -153,6 +160,46 @@ Let's filter out the noise:
 The ausearch output shows:
 - `key=cloudia` — the watch rule for `cloudia.txt` fired
 - `exe=./attack-a` — the responsible binary
-- `a2=O_WRONLY|O_CREAT|O_APPEND` — a write operation (not a read)
+- `a2=O_WRONLY|O_CREAT|O_APPEND` — a write operation 
 
 ### Attack B
+<img width="2549" height="225" alt="image" src="https://github.com/user-attachments/assets/408717c6-d836-4ae5-9938-b984e437c76c" />
+
+The ausearch output shows:
+- `key=oakley` & `key=squeaky` — the watch rule for `oakley.txt` and `squeaky.txt` fired
+- `exe=./attack-b` — the responsible binary
+- `a2=O_WRONLY|O_CREAT|O_APPEND` — a write operation 
+
+### Attack C
+<img width="2542" height="141" alt="image" src="https://github.com/user-attachments/assets/7710a101-956e-4e52-a44a-b12890d940a6" />
+
+The ausearch output shows:
+- `key=precipitation` — the watch rule for `precipitation.csv` fired
+- `exe=./attack-c` — the responsible binary
+- `a2=O_WRONLY|O_CREAT|O_APPEND` — a write operation
+
+### Attribution Summary
+| Attack Binary | Modified File(s) | Operation |
+|---------------|------------------|-----------|
+| `attack-a` | `cloudia.txt` | `O_WRONLY\|O_CREAT\|O_APPEND` |
+| `attack-b` | `oakley.txt`, `squeaky.txt` | `O_WRONLY\|O_CREAT\|O_APPEND` |
+| `attack-c` | `precipitation.csv` | `O_WRONLY\|O_CREAT\|O_APPEND` |
+
+## Lessons Learned
+- The first set of rules I wrote used `~/protected_files/...` as the watch path. The rules loaded without error but never fired so I knew auditd treats the tilde literally. Switching to the full absolute path fixed it.
+
+- At one point a rule had an incorrect path which caused `auditctl -R` to exit with `res=no` and stop processing the file entirely, meaning none of the rules below it loaded. I didn't catch it until I ran `sudo auditctl -l` and noticed the list was shorter than expected. Now I verify loaded rules after every reload.
+
+- I initially ran the binaries from my working directory and got no log entries. Running `strings attack-a | grep protected` revealed they expected files at a completely different hardcoded path. Once I recreated that directory structure the attacks worked.
+
+- After copying the protected files with `sudo cp`, they were owned by root so the binaries couldn't write to them — again no log entries. A `sudo chown -R kali:kali /home/codepath` resolved it.
+
+- In a real environment, an attacker with root access can wipe the audit log entirely. Forwarding logs to a remote SIEM in real time ensures the record survives even if the host is compromised.
+
+## Tools Used 🛠️
+
+- **auditd** — Linux kernel audit daemon that writes events to `/var/log/audit/audit.log`
+- **auditctl** — Set and verified watch rules in the running kernel
+- **augenrules** — Loaded the persistent rules file into the running kernel without a restart
+- **ausearch** — Queried the audit log by executable (`-x`) and used `grep` to filter output by attack file name
+- **strings** — Inspected the attack binaries to discover the hardcoded protected files path
