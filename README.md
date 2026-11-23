@@ -120,7 +120,7 @@ Watch rules were written for each of the 10 protected files in
 
 
 
-### 3. Loading the Rules
+### 4. Loading the Rules
 Rules were loaded permanently using:
 
 ```bash
